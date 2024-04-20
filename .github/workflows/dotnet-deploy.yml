@@ -10,20 +10,16 @@ jobs:
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
     steps:
     - uses: actions/checkout@v4
-  
-    - name: Cache nuget
-      uses: actions/cache@v3
+      
+    - uses: actions/setup-dotnet@v4
       with:
-        path: ${{ github.workspace }}\.nuget\packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }} #hash of project files
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+        dotnet-version: 8.x
+        cache: true
+        
+    - run: dotnet restore --locked-mode
           
     # slows down publish, but optimizes wasm
     # - run: dotnet workload install wasm-tools
-  
-    - name: Install dependencies
-      run: dotnet restore
   
     - name: Publish
       run: dotnet publish -c Release -o Public Sources/BlazorFirebaseTest.csproj --no-restore
