@@ -15,6 +15,9 @@ jobs:
       - run: dotnet workload install wasm-tools 
       - name: .NET restore
         uses: zyactions/dotnet-restore@v1
+        with:
+          working-directory: Sources
+          workspace: BlazorFirebaseTest.csproj
       - uses: actions/checkout@v4
       - run: dotnet publish -c Release -o Public Sources/BlazorFirebaseTest.csproj
       - uses: FirebaseExtended/action-hosting-deploy@v0
