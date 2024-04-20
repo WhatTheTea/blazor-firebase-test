@@ -2,8 +2,7 @@
 
 on:
   workflow_call:
-    secrets: 
-      inherit
+
 jobs:
   dotnet-deploy:
     runs-on: ubuntu-latest
