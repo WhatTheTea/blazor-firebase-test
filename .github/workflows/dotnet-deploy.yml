@@ -6,6 +6,8 @@ on:
 jobs:
   dotnet-deploy:
     runs-on: ubuntu-latest
+    env:
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
     steps:
     - uses: actions/checkout@v4
   
@@ -16,8 +18,9 @@ jobs:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }} #hash of project files
         restore-keys: |
           ${{ runner.os }}-nuget-
-  
-    - run: dotnet workload install wasm-tools
+          
+    # slows down publish, but optimizes wasm
+    # - run: dotnet workload install wasm-tools
   
     - name: Install dependencies
       run: dotnet restore
