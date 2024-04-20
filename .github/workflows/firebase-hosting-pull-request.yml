@@ -12,6 +12,7 @@ jobs:
     uses: ./.github/workflows/dotnet-deploy.yml
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    needs: deploy_wasm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

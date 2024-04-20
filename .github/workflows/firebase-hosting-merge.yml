@@ -10,6 +10,7 @@ jobs:
   deploy_wasm:
     uses: ./.github/workflows/dotnet-deploy.yml
   deploy_to_firebase:
+    needs: deploy_wasm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
