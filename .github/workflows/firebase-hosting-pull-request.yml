@@ -9,7 +9,7 @@ permissions:
   pull-requests: write
 jobs:
   deploy_wasm:
-    uses: ./.github/workflows/dotnet-deploy.yml@v0
+    uses: ./.github/workflows/dotnet-deploy.yml
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
