@@ -1,19 +1,19 @@
-﻿@page "/weather"
+﻿@page "/people"
 @using Firebase.Database
 @using BlazorFirebaseTest.Models
 @using System.Text.Json
 @inject HttpClient Http
 
-<PageTitle>Weather</PageTitle>
+<PageTitle>People</PageTitle>
 
-<h1>Weather</h1>
+<h1>Люди з БД</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+<p>Дістаємо дані з Realtime Database</p>
 
 @if (string.IsNullOrEmpty(peopleJson))
 {
     <p>
-        <em>Loading...</em>
+        <em>Завантаження...</em>
     </p>
 }
 else
@@ -21,8 +21,8 @@ else
     <table class="table">
         <thead>
         <tr>
-            <th>First name</th>
-            <th>Last name</th>
+            <th>Ім'я</th>
+            <th>Прізвище</th>
         </tr>
         </thead>
         <tbody>
