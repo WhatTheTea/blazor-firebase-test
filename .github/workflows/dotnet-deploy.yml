@@ -15,6 +15,7 @@ jobs:
       with:
         dotnet-version: 8.x
         cache: true
+        cache-dependency-path: ./Sources/packages.lock.json
         
     - run: dotnet restore --locked-mode
           
