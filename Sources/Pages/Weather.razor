@@ -1,4 +1,7 @@
 ﻿@page "/weather"
+@using Firebase.Database
+@using BlazorFirebaseTest.Models
+@using System.Text.Json
 @inject HttpClient Http
 
 <PageTitle>Weather</PageTitle>
@@ -7,7 +10,7 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (forecasts == null)
+@if (string.IsNullOrEmpty(peopleJson))
 {
     <p>
         <em>Loading...</em>
@@ -18,20 +21,16 @@ else
     <table class="table">
         <thead>
         <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
+            <th>First name</th>
+            <th>Last name</th>
         </tr>
         </thead>
         <tbody>
-        @foreach (var forecast in forecasts)
+        @foreach (var person in people)
         {
             <tr>
-                <td>@forecast.Date.ToShortDateString()</td>
-                <td>@forecast.TemperatureC</td>
-                <td>@forecast.TemperatureF</td>
-                <td>@forecast.Summary</td>
+                <td>@person.FirstName</td>
+                <td>@person.LastName</td>
             </tr>
         }
         </tbody>
@@ -39,22 +38,18 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private FirebaseClient firebaseClient = new("https://asptest-1c6c7-default-rtdb.europe-west1.firebasedatabase.app/");
+
+    private string peopleJson = string.Empty;
+    private IEnumerable<Person> people;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
-    }
-
-    public class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-
-        public int TemperatureC { get; set; }
-
-        public string? Summary { get; set; }
-
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        peopleJson =  await this.firebaseClient
+            .Child("People")
+            .OnceAsJsonAsync();
+        people = JsonSerializer.Deserialize<IEnumerable<Person>>(peopleJson) 
+                 ?? Array.Empty<Person>();
     }
 
 }
