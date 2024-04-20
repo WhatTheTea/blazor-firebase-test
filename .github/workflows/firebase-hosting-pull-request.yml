@@ -15,8 +15,6 @@ jobs:
     needs: deploy_wasm
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        
       - name: Deploy to firebase hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
