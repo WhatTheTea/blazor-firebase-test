@@ -12,8 +12,10 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
+      - run: dotnet workload install wasm-tools 
+      - name: .NET restore
+        uses: zyactions/dotnet-restore@v1
       - uses: actions/checkout@v4
-      - run: dotnet restore
       - run: dotnet publish -c Release -o Public Sources/BlazorFirebaseTest.csproj
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
