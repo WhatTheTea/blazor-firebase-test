@@ -12,10 +12,8 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     steps:
-      - run: dotnet workload install wasm-tools 
-      - run: dotnet tool restore
-      - uses: actions/checkout@v4
-      - run: dotnet publish -c Release -o Public Sources/BlazorFirebaseTest.csproj
+      - uses: ./.github/workflows/dotnet-deploy.yml
+        
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

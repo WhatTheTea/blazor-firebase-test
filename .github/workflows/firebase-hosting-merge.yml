@@ -10,11 +10,10 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - run: dotnet workload install wasm-tools
-      - run: dotnet tool restore
-      - uses: actions/checkout@v4
-      - run: dotnet publish -c Release -o Public Sources/BlazorFirebaseTest.csproj
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - uses: ./.github/workflows/dotnet-deploy.yml 
+          
+      - name: Deploy to firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ASPTEST_1C6C7 }}

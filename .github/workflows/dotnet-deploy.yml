@@ -1,0 +1,27 @@
+﻿name: Deploy WASM
+
+on:
+  workflow_call:
+    secrets: 
+      inherit
+jobs:
+  dotnet-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+  
+    - name: Cache nuget
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}\.nuget\packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }} #hash of project files
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+  
+    - run: dotnet workload install wasm-tools
+  
+    - name: Install dependencies
+      run: dotnet restore
+  
+    - name: Publish
+      run: dotnet publish -c Release -o Public Sources/BlazorFirebaseTest.csproj --no-restore
