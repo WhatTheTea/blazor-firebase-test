@@ -1,0 +1,33 @@
+﻿@page "/people/create"
+@using BlazorFirebaseTest.Models
+@using Firebase.Database
+@using Firebase.Database.Query
+@inject FirebaseClient FirebaseClient
+@inject NavigationManager NavigationManager
+<h3>PersonCreate</h3>
+
+<form method="post" @onsubmit="Submit">
+    <AntiforgeryToken/>
+    Ім'я:
+    <InputText @bind-Value="Model!.FirstName" type="text"/> <br/>
+    Прізвище:
+    <InputText @bind-Value="Model!.LastName" type="text"/> <br/>
+    <button type="submit">Create</button>
+</form>
+
+
+@code {
+    [SupplyParameterFromForm] public Person? Model { get; set; }
+
+    protected override void OnInitialized() => Model ??= new Person("","","");
+
+    private async void Submit()
+    {
+        await this.FirebaseClient
+            .Child("People")
+            .PostAsync(this.Model);
+        
+        this.NavigationManager.NavigateTo("/people");
+    }
+
+}
