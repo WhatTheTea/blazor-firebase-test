@@ -19,13 +19,13 @@
 @code {
     [SupplyParameterFromForm] public Person? Model { get; set; }
 
-    protected override void OnInitialized() => Model ??= new Person("","","");
+    protected override void OnInitialized() => Model ??= new Person(null,"","");
 
     private async void Submit()
     {
         await this.FirebaseClient
             .Child("People")
-            .PostAsync(this.Model);
+            .PostAsync(this.Model, false);
         
         this.NavigationManager.NavigateTo("/people");
     }

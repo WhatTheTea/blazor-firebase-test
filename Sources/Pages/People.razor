@@ -55,7 +55,7 @@ else
             .Child("People")
             .OnceAsJsonAsync();
         var pairs = JsonSerializer.Deserialize<Dictionary<string, Person>>(peopleJson)
-        ?? throw new Exception("Data was not supplied");
+                    ?? new Dictionary<string, Person>();
         this.people = new ObservableCollection<Person>(pairs.Select(pair =>
         {
             pair.Value.Id = pair.Key;
