@@ -3,6 +3,7 @@
 @using BlazorFirebaseTest.Models
 @using System.Text.Json
 @using Firebase.Database.Query
+@using System.Collections.ObjectModel
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject FirebaseClient FirebaseClient
@@ -36,7 +37,7 @@ else
                 <td>@person.FirstName</td>
                 <td>@person.LastName</td>
                 <td>
-                    <button @onclick="() => RemovePerson(person)">delete</button>
+                    <button @onclick="async () => await RemovePerson(person)">delete</button>
                 </td>
             </tr>
         }
@@ -46,22 +47,30 @@ else
 
 @code {
     private string peopleJson = string.Empty;
-    private IEnumerable<Person> people;
+    private ObservableCollection<Person> people;
 
     protected override async Task OnInitializedAsync()
     {
         peopleJson =  await this.FirebaseClient
             .Child("People")
             .OnceAsJsonAsync();
-        people = JsonSerializer.Deserialize<Dictionary<string, Person>>(peopleJson)?.Values
+        var pairs = JsonSerializer.Deserialize<Dictionary<string, Person>>(peopleJson)
         ?? throw new Exception("Data was not supplied");
+        this.people = new ObservableCollection<Person>(pairs.Select(pair =>
+        {
+            pair.Value.Id = pair.Key;
+            return pair.Value;
+        }));
     }
 
-    private async void RemovePerson(Person person) =>
+    private async Task RemovePerson(Person person)
+    {
         await this.FirebaseClient
             .Child("People")
             .Child(person.Id)
             .DeleteAsync();
+        this.people.Remove(person);
+    }
 
     private void NavigateToCreate() => Navigation.NavigateTo("/people/create");
 
